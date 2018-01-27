@@ -8,12 +8,12 @@ from threading import Thread
 
 import itchat
 
-from autoreply import MsgAutoReply
-from execution import Execution
-from keeponline import KeepOnline
-from keywordlistener import KeywordListener
-from revocation import Revocation
-from signin import SignInMPS
+from .autoreply import MsgAutoReply
+from .execution import Execution
+from .keeponline import KeepOnline
+from .keywordlistener import KeywordListener
+from .revocation import Revocation
+from .signin import SignInMPS
 
 exec_command = Execution()
 rmsg = Revocation()
@@ -153,6 +153,41 @@ def keeponline_func():
         keeponline.ActiveWX()
         time.sleep(3600)
 
+def run(dir='.'):
+    if sys.platform == 'linux':
+        if "XDG_CURRENT_DESKTOP" in os.environ:
+            itchat.auto_login(hotReload=True, picDir=dir)
+        else:
+            itchat.auto_login(hotReload=True, enableCmdQR=2, picDir=dir)
+    else:
+        itchat.auto_login(hotReload=True, picDir=dir)
+    # itchat.auto_login(hotReload=True)
+    run_thread = Thread(target=itchat.run)
+    clearmsglist_thread = Thread(target=clearmsglist_func)
+    execute_thread = Thread(target=execute_func)
+    revocation_thread = Thread(target=revocation_func)
+    keywordlisten_thread = Thread(target=keywordlisten_func)
+    autoreply_thread = Thread(target=autoreply_func)
+    signin_thread = Thread(target=signin_func)
+    keeponline_thread = Thread(target=keeponline_func)
+
+    run_thread.start()
+    execute_thread.start()
+    revocation_thread.start()
+    keywordlisten_thread.start()
+    autoreply_thread.start()
+    signin_thread.start()
+    keeponline_thread.start()
+    clearmsglist_thread.start()
+
+    run_thread.join()
+    execute_thread.join()
+    revocation_thread.join()
+    keywordlisten_thread.join()
+    autoreply_thread.join()
+    signin_thread.join()
+    keeponline_thread.join()
+    clearmsglist_thread.join()
 
 if __name__ == '__main__':
     # 机器上有默认的图片打开程序，直接弹出二维码扫码登陆

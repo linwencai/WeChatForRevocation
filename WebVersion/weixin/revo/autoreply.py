@@ -1,10 +1,12 @@
+# !/usr/bin/env python
+# -*- encoding:utf-8 -*-
 import os
 import sqlite3
 import time
 
 import itchat
 
-import config
+from . import config
 
 
 class MsgAutoReply:

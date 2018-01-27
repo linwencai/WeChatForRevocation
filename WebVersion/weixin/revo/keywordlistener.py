@@ -5,7 +5,7 @@ from time import localtime, strftime
 
 import itchat
 
-import config
+from . import config
 
 
 class KeywordListener:

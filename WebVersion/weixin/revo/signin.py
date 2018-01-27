@@ -5,7 +5,7 @@ import time
 
 import itchat
 
-import config
+from . import config
 
 
 class SignInMPS:
